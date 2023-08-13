@@ -1,28 +1,11 @@
-from fastapi import status, FastAPI, Response
+from fastapi import FastAPI
 
-from src.domain.use_cases.sign_in_use_case import SignInUseCaseImpl
-from src.external.network.clients.http_client import HttpClientImpl
-from src.domain.parameters.sign_in_parameter import SignInParameter
-from src.domain.repositories.authentication_repository import AuthenticationRepositoryImpl
+from src.presentation.routes import authentication_route
 
-from src.data.datasources.remote.remote_authentication_datasource_impl import (
-    RemoteAuthenticationDatasourceImpl
+app = FastAPI(
+    version="1.0.0",
+    title="King's Cross",
+    description="BFF Application",
 )
 
-app = FastAPI(title="King's Cross")
-
-client = HttpClientImpl()
-datasource = RemoteAuthenticationDatasourceImpl(client)
-repository = AuthenticationRepositoryImpl(datasource)
-use_case = SignInUseCaseImpl(repository)
-
-@app.post("/")
-async def sign_in(parameter: SignInParameter, response: Response):
-    data = await use_case.run(parameter)
-
-    if data.is_err():
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return data.err()
-    else:
-        response.status_code = status.HTTP_200_OK
-        return data.ok()
+app.include_router(prefix="/v1", router=authentication_route.router)

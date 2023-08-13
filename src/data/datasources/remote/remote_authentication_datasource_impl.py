@@ -47,8 +47,8 @@ class RemoteAuthenticationDatasourceImpl(RemoteAuthenticationDatasource):
 
         match response.status_code:
             case 200 | 201:
-                return Ok(AuthenticationResponse.from_json(data))
+                return Ok(AuthenticationResponse.model_validate(data))
             case 400 | 401:
-                return Err(MessageResponse.from_json(data, True))
+                return Err(MessageResponse.model_validate(data))
             case _:
-                return Err(MessageResponse.from_json(data))
+                return Err(MessageResponse.model_validate(data))
