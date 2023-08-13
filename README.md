@@ -1,4 +1,4 @@
-# Projeto Python com GraphQL
+# Projeto Python com FastAPI
 
 Este é um projeto Python que utiliza FastAPI para implementar uma API para uma aplicação específica.
 
